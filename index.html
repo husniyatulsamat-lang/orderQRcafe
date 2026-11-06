@@ -377,8 +377,8 @@ body.lock{overflow:hidden}
       <b>CARA ORDER</b>
       <div class="steps">
         <div class="step"><div class="num">1</div><p>Tekan <b>+</b> pada menu yang nak dipesan.</p></div>
-        <div class="step"><div class="num">2</div><p>Buka troli di bawah &amp; semak order.</p></div>
-        <div class="step"><div class="num">3</div><p>Isi nama &amp; no. telefon, tekan <b>Hantar order</b>. Order terus masuk ke kaunter. Bayar sebelum balik.</p></div>
+        <div class="step"><div class="num">2</div><p>Buka troli, isi nama &amp; nombor meja.</p></div>
+        <div class="step"><div class="num">3</div><p>Tekan <b style="color:#1F8A4C">Hantar ke WhatsApp</b>, kemudian tekan Send. Bayar di kaunter sebelum balik.</p></div>
       </div>
     </div>
   </div>
@@ -431,7 +431,7 @@ const STAFF_WA   = '60108386297';
 const STAFF_SHOW = '010-838 6297';
 /* MODE: 'kaunter'  = pelanggan tunjuk skrin & bayar di kaunter dulu (macam KFC/McD)
          'whatsapp' = order dihantar terus ke WhatsApp staf */
-const MODE = 'sheet';   /* 'sheet' = order masuk Google Sheet & skrin staf */
+const MODE = 'whatsapp';   /* 'sheet' = order masuk Google Sheet & skrin staf */
 /* Link Web app Google Apps Script (Deploy → Web app). Kosong = pelanggan tunjuk skrin di kaunter */
 const ORDER_URL = 'https://script.google.com/macros/s/AKfycbxyf62tz_Ic-_eTSpjFz_HPyg6xH_mexfN03TBRZ6H684BIT7zRz8QQHwQtHor1BFkf/exec';
 
@@ -993,12 +993,13 @@ function renderCart(){
     <label class="lbl-f" for="cName">Nama</label>
     <input class="field" id="cName" maxlength="40" autocomplete="given-name" placeholder="Nama untuk panggil order" value="${esc(cust.name)}">
     <p class="err" id="eName" hidden>Sila isi nama.</p>
+    ${MODE === 'sheet' ? `
 
     <label class="lbl-f" for="cPhone">No. telefon</label>
     <input class="field" id="cPhone" type="tel" inputmode="tel" maxlength="15" autocomplete="tel" placeholder="cth 012-345 6789" value="${esc(cust.phone)}">
     <p class="hint">Untuk kami panggil bila order siap.</p>
     <p class="err" id="ePhone" hidden>Sila isi no. telefon yang betul (cth 012-345 6789).</p>
-    <label class="opt promo"><input type="checkbox" id="cPromo"${cust.promo ? ' checked' : ''}><span>Saya nak terima info promo &amp; menu baru Dalle’ck Cafe</span></label>
+    <label class="opt promo"><input type="checkbox" id="cPromo"${cust.promo ? ' checked' : ''}><span>Saya nak terima info promo &amp; menu baru Dalle’ck Cafe</span></label>` : ''}
 
     <span class="lbl-f">Makan sini atau bungkus?</span>
     <div class="seg">
@@ -1178,6 +1179,7 @@ function showDone(msg, link){
       <div class="big">${esc(orderNo)}</div>
       <h3>Tekan Send dalam WhatsApp</h3>
       <p>Order belum diterima selagi mesej tak dihantar. Lepas hantar, staf akan sediakan order${cust.type === 'dine' ? ' ke meja ' + esc(cust.table) : ''}. ${cust.type === 'dine' ? 'Bayar di kaunter sebelum balik.' : 'Bayar di kaunter semasa ambil order.'}</p>
+      <p><b>Save nombor ${esc(STAFF_SHOW)}</b> dalam phone untuk dapat info promo Dalle’ck Cafe.</p>
       <div class="btns">
         <a class="primary wa" href="${esc(link)}" target="_blank" rel="noopener">${WA_ICON} Buka WhatsApp semula</a>
         <button class="ghost" type="button" id="copyMsg">Salin teks order</button>
